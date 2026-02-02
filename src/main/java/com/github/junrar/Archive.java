@@ -31,23 +31,7 @@ import com.github.junrar.exception.UnsupportedRarEncryptedException;
 import com.github.junrar.exception.UnsupportedRarV5Exception;
 import com.github.junrar.io.RawDataIo;
 import com.github.junrar.io.SeekableReadOnlyByteChannel;
-import com.github.junrar.rarfile.AVHeader;
-import com.github.junrar.rarfile.BaseBlock;
-import com.github.junrar.rarfile.BlockHeader;
-import com.github.junrar.rarfile.CommentHeader;
-import com.github.junrar.rarfile.EAHeader;
-import com.github.junrar.rarfile.EndArcHeader;
-import com.github.junrar.rarfile.FileHeader;
-import com.github.junrar.rarfile.MacInfoHeader;
-import com.github.junrar.rarfile.MainHeader;
-import com.github.junrar.rarfile.MarkHeader;
-import com.github.junrar.rarfile.ProtectHeader;
-import com.github.junrar.rarfile.RARVersion;
-import com.github.junrar.rarfile.SignHeader;
-import com.github.junrar.rarfile.SubBlockHeader;
-import com.github.junrar.rarfile.SubBlockHeaderType;
-import com.github.junrar.rarfile.UnixOwnersHeader;
-import com.github.junrar.rarfile.UnrarHeadertype;
+import com.github.junrar.rarfile.*;
 import com.github.junrar.unpack.ComprDataIO;
 import com.github.junrar.unpack.Unpack;
 import com.github.junrar.volume.FileVolumeManager;
@@ -509,6 +493,11 @@ public class Archive implements Closeable, Iterable<FileHeader> {
                                 case NTACL_HEAD:
                                     break;
                                 case STREAM_HEAD:
+                                    final byte[] streamHeaderBuffer = safelyAllocate(StreamHeader.streamHeaderSize, MAX_HEADER_SIZE);
+                                    rawData.readFully(streamHeaderBuffer, streamHeaderBuffer.length);
+                                    final StreamHeader streamHeader = new StreamHeader(subHead, streamHeaderBuffer);
+                                    streamHeader.print();
+                                    this.headers.add(streamHeader);
                                     break;
                                 case UO_HEAD:
                                     toRead = subHead.getHeaderSize(false);
