@@ -26,18 +26,30 @@ public class StreamHeader extends SubBlockHeader {
         SCRC = Raw.readIntLittleEndian(streamHead, pos);
     }
 
+    /**
+     * @return the SCRC
+     */
     public int getSCRC() {
         return SCRC;
     }
 
+    /**
+     * @return the method
+     */
     public byte getMethod() {
         return method;
     }
 
+    /**
+     * @return the unpSize
+     */
     public int getUnpSize() {
         return unpSize;
     }
 
+    /**
+     * @return the unpVer
+     */
     public byte getUnpVer() {
         return unpVer;
     }
